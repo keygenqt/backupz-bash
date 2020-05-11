@@ -4,8 +4,8 @@ version: '0.0.1'
 summary: Backupz create zip archive with backup
 description: |
   * Select dirs
-  * Exclude dirs (regex)
-  * Exclude files (regex)
+  * Search by regex
+  * Exclude by regex
   * Backup to ftp
   * Backup to yandex disk
   * Backup to google disk
@@ -20,6 +20,9 @@ parts:
     source: scripts
     organize:
       run.sh: bin/
+
+    stage-packages:
+      - jq
 
 apps:
   backupz:

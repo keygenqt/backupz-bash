@@ -1,0 +1,19 @@
+{
+  "folders": [
+    "/home/keygenqt/Pictures/payments",
+    "/home/keygenqt/Pictures/screener"
+  ],
+  "files": [
+    "/home/keygenqt/Pictures/232.jpg",
+    "/home/keygenqt/Pictures/320.jpg"
+  ],
+  "exclude": [
+    "*.idea*",
+    "*vendor*",
+    "*runtime*",
+    "*app/build*"
+  ],
+  "include": [],
+  "save": "/home/keygenqt/backup",
+  "compress": "-9"
+}
