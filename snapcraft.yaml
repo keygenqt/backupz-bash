@@ -1,0 +1,29 @@
+name: backupz
+base: core18
+version: '0.0.1'
+summary: Backupz create zip archive with backup
+description: |
+  * Select dirs
+  * Exclude dirs (regex)
+  * Exclude files (regex)
+  * Backup to ftp
+  * Backup to yandex disk
+  * Backup to google disk
+
+grade: stable
+confinement: strict
+architectures: [ all ]
+
+parts:
+  backupz:
+    plugin: dump
+    source: scripts
+    organize:
+      run.sh: bin/
+
+apps:
+  backupz:
+    command: bin/run.sh
+    plugs:
+      - home
+      - network
