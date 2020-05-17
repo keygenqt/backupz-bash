@@ -6,6 +6,6 @@
     "*vendor*",
     "*runtime*"
   ],
-  "save": "keygenqt:334400ddgg@192.168.1.70:/Backup/KEYGEN/Backup",
+  "save": "ftp:username:pass@192.168.1.70:/Backup",
   "compress": "-9"
 }

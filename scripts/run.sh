@@ -25,11 +25,7 @@ mkdir "$dirBackUp"
 CLEAR='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[32m'
-
-echo "${RED}START CONFIGURE${CLEAR}"
-echo ""
-
-COMMAND="echo ''"
+BLUE='\033[34m'
 
 SAVE=$(jq '.save' "$CONF" | sed -e "s/\"//g")
 COMPRESS=$(jq '.compress' "$CONF" | sed -e "s/\"//g")
@@ -43,6 +39,10 @@ for k in $(jq '.exclude | keys | .[]' "$CONF"); do
   EXCLUDE="$EXCLUDE -x \"$value\""
 done
 
+echo ""
+echo "${BLUE}START ZIP FOLDERS${CLEAR}"
+
+add=""
 for k in $(jq '.folders | keys | .[]' "$CONF"); do
   value=$(jq -r ".folders[$k]" "$CONF")
   if [ -z "$value" ]; then
@@ -52,11 +52,24 @@ for k in $(jq '.folders | keys | .[]' "$CONF"); do
     echo "${RED}error${CLEAR}:    $value"
   else
     name=$(basename "$value")
-    COMMAND="$COMMAND && zip -q -r '$dirBackUp/$name.zip' '$value' $EXCLUDE $COMPRESS"
-    echo "${GREEN}success${CLEAR}:  $value"
+    out=$(sh -c "zip -q -r '$dirBackUp/$name.zip' '$value' $EXCLUDE $COMPRESS" | sed -e ":a;$!{N;s/\n//;ba;}")
+    if echo "$out" | grep -q "zip error"; then
+      echo "${RED}compress error${CLEAR}:  $out"
+    else
+      echo "${GREEN}compress successfully${CLEAR}:  $value"
+      add="1"
+    fi
   fi
 done
 
+if [ -z "$add" ]; then
+  echo "${BLUE}Folders not found${CLEAR}"
+fi
+
+echo ""
+echo "${BLUE}START ZIP FILES${CLEAR}"
+
+add=""
 for k in $(jq '.files | keys | .[]' "$CONF"); do
   value=$(jq -r ".files[$k]" "$CONF")
   if [ -z "$value" ]; then
@@ -66,38 +79,48 @@ for k in $(jq '.files | keys | .[]' "$CONF"); do
     echo "${RED}error${CLEAR}:    $value"
   else
     name=$(basename "$value")
-    COMMAND="$COMMAND && zip -q -r '$dirBackUp/$name.zip' '$value' $EXCLUDE $COMPRESS"
-    echo "${GREEN}success${CLEAR}:  $value"
+    out=$(sh -c "zip -q -r '$dirBackUp/$name.zip' '$value' $EXCLUDE $COMPRESS" | sed -e ":a;$!{N;s/\n//;ba;}")
+    if echo "$out" | grep -q "zip error"; then
+      echo "${RED}compress error${CLEAR}:  $out"
+    else
+      echo "${GREEN}compress successfully${CLEAR}:  $value"
+      add="1"
+    fi
   fi
 done
 
-if [ "$COMMAND" = "echo ''" ]; then
-  echo "${RED}Command for compress empty${CLEAR}"
-  rm -rf "$dirBackUp"
-  exit 0
+if [ -z "$add" ]; then
+  echo "${BLUE}Files not found${CLEAR}"
 fi
 
-out=$(sh -c "$COMMAND" | sed -e ":a;$!{N;s/\n//;ba;}")
-
 echo ""
+echo "${BLUE}SAVE START${CLEAR}"
 
-if echo "$out" | grep -q "zip error"; then
-  echo "${RED}$out${CLEAR}"
-  rm -rf "$dirBackUp"
-  exit 1
+save=""
+if echo "$SAVE" | grep -q "ftp:"; then
+  path=$(echo "$SAVE" | sed -e "s/ftp\://g")
+  saveToFtp "$dirBackUp" "$path"
+  save="1"
+fi
+
+if echo "$SAVE" | grep -q "dir:"; then
+  path=$(echo "$SAVE" | sed -e "s/dir\://g")
+  saveToPath "$dirBackUp" "$path"
+  save="1"
+fi
+
+if [ -z "$save" ]; then
+  echo "${RED}SAVE ERROR${CLEAR}"
 else
-  if echo "$SAVE" | grep -q "@"; then
-    saveToFtp "$dirBackUp" "$SAVE"
-  else
-    saveToPath "$dirBackUp" "$SAVE"
-  fi
+  echo "${GREEN}SAVE DONE${CLEAR}"
 fi
 
 end=$(date +%s)
 runtime=$((end - start))
 
+echo ""
 echo "----------------------"
-printf 'RUNTIME: %dh:%dm:%ds\n' $((runtime / 3600)) $((runtime % 3600 / 60)) $((runtime % 60))
+printf "${BLUE}RUNTIME${CLEAR}: %dh:%dm:%ds\n" $((runtime / 3600)) $((runtime % 3600 / 60)) $((runtime % 60))
 echo "----------------------"
 
 exit 0

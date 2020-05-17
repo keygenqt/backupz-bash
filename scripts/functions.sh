@@ -5,6 +5,9 @@ saveToPath() {
 }
 
 saveToFtp() {
+  if [ -d ".ftp_" ]; then
+    rm -rf ".ftp_"
+  fi
   mkdir ".ftp_"
   curlftpfs "$2" ".ftp_"
   mv "$1" ".ftp_"
