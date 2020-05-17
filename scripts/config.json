@@ -1,19 +1,11 @@
 {
-  "folders": [
-    "/home/keygenqt/Pictures/payments",
-    "/home/keygenqt/Pictures/screener"
-  ],
-  "files": [
-    "/home/keygenqt/Pictures/232.jpg",
-    "/home/keygenqt/Pictures/320.jpg"
-  ],
+  "folders": [],
+  "files": [],
   "exclude": [
     "*.idea*",
     "*vendor*",
-    "*runtime*",
-    "*app/build*"
+    "*runtime*"
   ],
-  "include": [],
-  "save": "/home/keygenqt/backup",
+  "save": "keygenqt:334400ddgg@192.168.1.70:/Backup/KEYGEN/Backup",
   "compress": "-9"
 }

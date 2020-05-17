@@ -4,11 +4,10 @@ version: '0.0.1'
 summary: Backupz create zip archive with backup
 description: |
   * Select dirs
-  * Search by regex
-  * Exclude by regex
-  * Backup to ftp
-  * Backup to yandex disk
-  * Backup to google disk
+  * Select files
+  * Exclude by regex (zip -x)
+  * Save backup to dir
+  * Save backup to ftp
 
 grade: stable
 confinement: strict
@@ -23,6 +22,8 @@ parts:
 
     stage-packages:
       - jq
+      - zip
+      - curlftpfs
 
 apps:
   backupz:
