@@ -5,6 +5,8 @@ Backupz
 
 ### Info
 
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/backupz)
+
 Backupz create zip archive with backup
 
 * Select dirs
