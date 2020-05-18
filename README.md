@@ -39,8 +39,7 @@ or
 ### Example dir:
 ```
 {
-  "folders": [
-   ],
+  "folders": [],
   "files": [
      "/home/keygenqt/Documents/archive.txt",
      "/home/keygenqt/Documents/Android/app.apk"
