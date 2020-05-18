@@ -1,6 +1,8 @@
 Backupz
 ===================
 
+![picture](data/logo160.png)
+
 ### Info
 
 Backupz create zip archive with backup
@@ -59,3 +61,5 @@ backupz
 ```
 
 ![picture](data/screenshot.png)
+
+<div>Icons made by <a href="https://icon54.com/" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
