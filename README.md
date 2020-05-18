@@ -23,9 +23,12 @@ or
 ### Example ftp:
 ```
 {
-  "folders": [],
+  "folders": [
+    "/home/keygenqt/Documents/Archive",
+    "/home/keygenqt/Documents/Android/App"
+  ],
   "files": [],
-  "exclude": [ // zip -x
+  "exclude": [
     "*.idea*"
   ],
   "save": "ftp:username:pass@192.168.1.70:/Backup",
@@ -36,9 +39,13 @@ or
 ### Example dir:
 ```
 {
-  "folders": [],
-  "files": [],
-  "exclude": [ // zip -x
+  "folders": [
+   ],
+  "files": [
+     "/home/keygenqt/Documents/archive.txt",
+     "/home/keygenqt/Documents/Android/app.apk"
+   ],
+  "exclude": [
     "*vendor*",
     "*runtime*"
   ],
