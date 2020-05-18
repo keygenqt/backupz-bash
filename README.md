@@ -1,7 +1,7 @@
 Backupz
 ===================
 
-![picture](data/logo160.png)
+![picture](data/logo-small.png)
 
 ### Info
 
