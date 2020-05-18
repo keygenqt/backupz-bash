@@ -48,7 +48,7 @@ or
     "*vendor*",
     "*runtime*"
   ],
-  "dir": "dir:/home/keygenqt/Documents",
+  "save": "dir:/home/keygenqt/Documents",
   "compress": "-9"
 }
 ```
