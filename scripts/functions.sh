@@ -5,14 +5,13 @@ saveToPath() {
 }
 
 saveToFtp() {
-  if [ -d ".ftp_" ]; then
-    rm -rf ".ftp_"
-  fi
-  mkdir ".ftp_"
-  curlftpfs "$2" ".ftp_"
-  mv "$1" ".ftp_"
-  fusermount -u ".ftp_"
-  rm -rf ".ftp_"
+  name=$(echo "$2" | cut -d ":" -f 2)
+  pass=$(echo "$2" | cut -d ":" -f 3)
+  domain=$(echo "$pass" | cut -d "@" -f 2)
+  pass=$(echo "$pass" | cut -d "@" -f 1)
+  path=$(echo "$2" | cut -d ":" -f 4)
+  sh -c "ncftpput -R -v -u \"$name\" -p \"$pass\" $domain $path \"$1\""
+  rm -rf "$1"
 }
 
 checkConfig() {
@@ -22,10 +21,17 @@ checkConfig() {
     fi
     if [ ! -f "$HOME/.backupz/config.json" ]; then
       cp "./config.json" "$HOME/.backupz/config.json"
+      echo ""
+      echo "You need update config file params: $HOME/.backupz/config.json"
+      echo ""
     fi
   else
     if [ ! -f "$SNAP_USER_COMMON/config.json" ]; then
-      cp "./config.json" "$SNAP_USER_COMMON/config.json"
+      cp "/snap/backupz/current/bin/config.json" "$SNAP_USER_COMMON/config.json"
+      echo ""
+      echo "You need update config file params: /snap/backupz/current/bin/config.json"
+      echo ""
+      exit 0
     fi
   fi
 }

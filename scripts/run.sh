@@ -1,20 +1,18 @@
 #! /bin/sh
 
-CONF="./config.json"
-
-. ./functions.sh
+if [ -z "$SNAP_USER_COMMON" ]; then
+  CONF="$HOME/.backupz/config.json"
+  . ./functions.sh
+else
+  CONF="$SNAP_USER_COMMON/config.json"
+  . /snap/backupz/current/bin/functions.sh
+fi
 
 checkConfig
 
-if [ -z "$SNAP_USER_COMMON" ]; then
-  CONF="$HOME/.backupz/config.json"
-else
-  CONF="$SNAP_USER_COMMON/config.json"
-fi
-
 start=$(date +%s)
 date=$(date "+%F %H:%M:%S")
-dirBackUp="BackUp ($date)"
+dirBackUp="$HOME/BackUp ($date)"
 
 if [ -d "$dirBackUp" ]; then
   rm -rf "$dirBackUp"
@@ -98,8 +96,7 @@ echo "${BLUE}SAVE START${CLEAR}"
 
 save=""
 if echo "$SAVE" | grep -q "ftp:"; then
-  path=$(echo "$SAVE" | sed -e "s/ftp\://g")
-  saveToFtp "$dirBackUp" "$path"
+  saveToFtp "$dirBackUp" "$SAVE"
   save="1"
 fi
 

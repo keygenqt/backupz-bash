@@ -19,11 +19,13 @@ parts:
     source: scripts
     organize:
       run.sh: bin/
+      functions.sh: bin/
+      config.json: bin/
 
     stage-packages:
       - jq
       - zip
-      - curlftpfs
+      - ncftp
 
 apps:
   backupz:
