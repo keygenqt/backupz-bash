@@ -1,13 +1,14 @@
 name: backupz
 base: core18
-version: '0.0.1'
-summary: Backupz create zip archive with backup
+version: '0.0.2'
+summary: Backupz create backup tar.gz archive
 description: |
   * Select dirs
   * Select files
-  * Exclude by regex (zip -x)
+  * Exclude by regex (tar --exclude)
   * Save backup to dir
   * Save backup to ftp
+  * Multiple processes
 
 grade: stable
 confinement: strict
@@ -23,8 +24,9 @@ parts:
 
     stage-packages:
       - jq
-      - zip
       - ncftp
+      - pigz
+      - tar
 
 apps:
   backupz:

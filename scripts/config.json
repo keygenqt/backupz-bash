@@ -2,10 +2,10 @@
   "folders": [],
   "files": [],
   "exclude": [
-    "*.idea*",
-    "*vendor*",
-    "*runtime*"
+    "*.idea*"
   ],
+  "save": "dir:/home/user/dir/backup",
+  or
   "save": "ftp:username:pass@192.168.1.70:/Backup",
-  "compress": "-9"
+  "processes": 4
 }

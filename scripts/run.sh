@@ -26,7 +26,7 @@ GREEN='\033[32m'
 BLUE='\033[34m'
 
 SAVE=$(jq '.save' "$CONF" | sed -e "s/\"//g")
-COMPRESS=$(jq '.compress' "$CONF" | sed -e "s/\"//g")
+PROCESSES=$(jq '.processes' "$CONF" | sed -e "s/\"//g")
 EXCLUDE=""
 
 for k in $(jq '.exclude | keys | .[]' "$CONF"); do
@@ -34,7 +34,7 @@ for k in $(jq '.exclude | keys | .[]' "$CONF"); do
   if [ -z "$value" ]; then
     continue
   fi
-  EXCLUDE="$EXCLUDE -x \"$value\""
+  EXCLUDE="$EXCLUDE --exclude=\"$value\""
 done
 
 echo ""
@@ -50,7 +50,7 @@ for k in $(jq '.folders | keys | .[]' "$CONF"); do
     echo "${RED}error${CLEAR}:    $value"
   else
     name=$(basename "$value")
-    out=$(sh -c "zip -q -r '$dirBackUp/$name.zip' '$value' $EXCLUDE $COMPRESS" | sed -e ":a;$!{N;s/\n//;ba;}")
+    out=$(sh -c "tar --absolute-names --use-compress-program='pigz --best --recursive -p $PROCESSES' $EXCLUDE -cf '$dirBackUp/$name.tar.gz' '$value'" | sed -e ":a;$!{N;s/\n//;ba;}")
     if echo "$out" | grep -q "zip error"; then
       echo "${RED}compress error${CLEAR}:  $out"
     else
@@ -77,7 +77,7 @@ for k in $(jq '.files | keys | .[]' "$CONF"); do
     echo "${RED}error${CLEAR}:    $value"
   else
     name=$(basename "$value")
-    out=$(sh -c "zip -q -r '$dirBackUp/$name.zip' '$value' $EXCLUDE $COMPRESS" | sed -e ":a;$!{N;s/\n//;ba;}")
+    out=$(sh -c "tar --absolute-names --use-compress-program='pigz --best --recursive -p $PROCESSES' -cf '$dirBackUp/$name.tar.gz' '$value'" | sed -e ":a;$!{N;s/\n//;ba;}")
     if echo "$out" | grep -q "zip error"; then
       echo "${RED}compress error${CLEAR}:  $out"
     else

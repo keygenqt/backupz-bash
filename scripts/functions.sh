@@ -14,6 +14,19 @@ saveToFtp() {
   rm -rf "$1"
 }
 
+checkConfigInfo() {
+  if [ -z "$SNAP_USER_COMMON" ]; then
+    echo ""
+    echo "You need update config file params: $HOME/.backupz/config.json"
+    echo ""
+  else
+    echo ""
+    echo "You need update config file params: /snap/backupz/current/bin/config.json"
+    echo ""
+  fi
+  exit 0
+}
+
 checkConfig() {
   if [ -z "$SNAP_USER_COMMON" ]; then
     if [ ! -d "$HOME/.backupz" ]; then
@@ -21,17 +34,28 @@ checkConfig() {
     fi
     if [ ! -f "$HOME/.backupz/config.json" ]; then
       cp "./config.json" "$HOME/.backupz/config.json"
-      echo ""
-      echo "You need update config file params: $HOME/.backupz/config.json"
-      echo ""
+      checkConfigInfo
+    else
+      ERROR=$({ jq <"$HOME/.backupz/config.json" type | sed s/Output/Useless/ >outfile; } 2>&1)
+      if [ -f "outfile" ]; then
+        rm "outfile"
+      fi
+      if echo "$ERROR" | grep -q "parse error"; then
+        checkConfigInfo
+      fi
     fi
   else
     if [ ! -f "$SNAP_USER_COMMON/config.json" ]; then
       cp "/snap/backupz/current/bin/config.json" "$SNAP_USER_COMMON/config.json"
-      echo ""
-      echo "You need update config file params: /snap/backupz/current/bin/config.json"
-      echo ""
-      exit 0
+      checkConfigInfo
+    else
+      ERROR=$({ jq <"$SNAP_USER_COMMON/config.json" type | sed s/Output/Useless/ >outfile; } 2>&1)
+      if [ -f "outfile" ]; then
+        rm "outfile"
+      fi
+      if echo "$ERROR" | grep -q "parse error"; then
+        checkConfigInfo
+      fi
     fi
   fi
 }

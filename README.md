@@ -7,13 +7,14 @@ Backupz
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/backupz)
 
-Backupz create backup zip archive
+Backupz create backup tar.gz archive
 
 * Select dirs
 * Select files
-* Exclude by regex (zip -x)
+* Exclude by regex (tar --exclude)
 * Save backup to dir
 * Save backup to ftp
+* Multiple processes
 
 ### Config file:
 ```
@@ -36,7 +37,7 @@ or
     "*.idea*"
   ],
   "save": "ftp:username:pass@192.168.1.70:/Backup",
-  "compress": "-9"
+  "processes": 32
 }
 ```
 
@@ -53,7 +54,7 @@ or
     "*runtime*"
   ],
   "save": "dir:/home/keygenqt/Documents",
-  "compress": "-9"
+  "processes": 32
 }
 ```
 
