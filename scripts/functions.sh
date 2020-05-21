@@ -15,8 +15,8 @@ saveToFtp() {
 }
 
 rmOutput() {
-  if [ -f "$HOME/outfile" ]; then
-    rm "$HOME/outfile"
+  if [ -f "$HOME/.outfile" ]; then
+    rm "$HOME/.outfile"
   fi
 }
 
@@ -42,7 +42,7 @@ checkConfig() {
       cp "./config.json" "$HOME/.backupz/config.json"
       checkConfigInfo
     else
-      ERROR=$({ jq <"$HOME/.backupz/config.json" type | sed s/Output/Useless/ >outfile; } 2>&1)
+      ERROR=$({ jq <"$HOME/.backupz/config.json" type | sed s/Output/Useless/ >.outfile; } 2>&1)
       rmOutput
       if echo "$ERROR" | grep -q "parse error"; then
         checkConfigInfo
@@ -53,7 +53,7 @@ checkConfig() {
       cp "/snap/backupz/current/bin/config.json" "$SNAP_USER_COMMON/config.json"
       checkConfigInfo
     else
-      ERROR=$({ jq <"$SNAP_USER_COMMON/config.json" type | sed s/Output/Useless/ >outfile; } 2>&1)
+      ERROR=$({ jq <"$SNAP_USER_COMMON/config.json" type | sed s/Output/Useless/ >.outfile; } 2>&1)
       rmOutput
       if echo "$ERROR" | grep -q "parse error"; then
         checkConfigInfo

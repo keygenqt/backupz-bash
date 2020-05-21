@@ -3,6 +3,11 @@ Backupz
 
 ![picture](data/logo-small.png)
 
+### Install for hidden file
+```
+sudo snap install backupz --devmode
+```
+
 ### Info
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/backupz)
