@@ -14,6 +14,12 @@ saveToFtp() {
   rm -rf "$1"
 }
 
+rmOutput() {
+  if [ -f "$HOME/outfile" ]; then
+    rm "$HOME/outfile"
+  fi
+}
+
 checkConfigInfo() {
   if [ -z "$SNAP_USER_COMMON" ]; then
     echo ""
@@ -37,9 +43,7 @@ checkConfig() {
       checkConfigInfo
     else
       ERROR=$({ jq <"$HOME/.backupz/config.json" type | sed s/Output/Useless/ >outfile; } 2>&1)
-      if [ -f "outfile" ]; then
-        rm "outfile"
-      fi
+      rmOutput
       if echo "$ERROR" | grep -q "parse error"; then
         checkConfigInfo
       fi
@@ -50,9 +54,7 @@ checkConfig() {
       checkConfigInfo
     else
       ERROR=$({ jq <"$SNAP_USER_COMMON/config.json" type | sed s/Output/Useless/ >outfile; } 2>&1)
-      if [ -f "outfile" ]; then
-        rm "outfile"
-      fi
+      rmOutput
       if echo "$ERROR" | grep -q "parse error"; then
         checkConfigInfo
       fi

@@ -69,9 +69,7 @@ for k in $(jq '.folders | keys | .[]' "$CONF"); do
   else
     name=$(basename "$value")
     ERROR=$({ sh -c "tar --absolute-names --use-compress-program='pigz --best --recursive -p $PROCESSES' $EXCLUDE -cf '$dirBackUp/$name.tar.gz' '$value'" | sed s/Output/Useless/ >outfile; } 2>&1)
-    if [ -f "outfile" ]; then
-      rm "outfile"
-    fi
+    rmOutput
     if echo "$ERROR" | grep -q "tar"; then
       echo "${RED}compress error${CLEAR}:  $value"
       if [ -n "$DEBUG" ]; then
@@ -105,9 +103,7 @@ for k in $(jq '.files | keys | .[]' "$CONF"); do
   else
     name=$(basename "$value")
     ERROR=$({ sh -c "tar --absolute-names --use-compress-program='pigz --best --recursive -p $PROCESSES' -cf '$dirBackUp/$name.tar.gz' '$value'" | sed s/Output/Useless/ >outfile; } 2>&1)
-    if [ -f "outfile" ]; then
-      rm "outfile"
-    fi
+    rmOutput
     if echo "$ERROR" | grep -q "tar"; then
       echo "${RED}compress error${CLEAR}:  $value"
       if [ -n "$DEBUG" ]; then
