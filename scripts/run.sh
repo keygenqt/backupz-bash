@@ -1,5 +1,20 @@
 #! /bin/sh
 
+DEBUG=""
+
+for i in "$@"; do
+  case $i in
+  -d | --debug)
+    DEBUG="1"
+    shift
+    ;;
+  *)
+    echo "${RED}Unknown parameter passed: $i${CLEAR}"
+    exit 1
+    ;;
+  esac
+done
+
 if [ -z "$SNAP_USER_COMMON" ]; then
   CONF="$HOME/.backupz/config.json"
   . ./functions.sh
@@ -47,12 +62,21 @@ for k in $(jq '.folders | keys | .[]' "$CONF"); do
     continue
   fi
   if [ ! -d "$value" ]; then
-    echo "${RED}error${CLEAR}:    $value"
+    echo "${RED}compress error${CLEAR}:    $value"
+    if [ -n "$DEBUG" ]; then
+      echo "Folder not found"
+    fi
   else
     name=$(basename "$value")
-    out=$(sh -c "tar --absolute-names --use-compress-program='pigz --best --recursive -p $PROCESSES' $EXCLUDE -cf '$dirBackUp/$name.tar.gz' '$value'" | sed -e ":a;$!{N;s/\n//;ba;}")
-    if echo "$out" | grep -q "zip error"; then
-      echo "${RED}compress error${CLEAR}:  $out"
+    ERROR=$({ sh -c "tar --absolute-names --use-compress-program='pigz --best --recursive -p $PROCESSES' $EXCLUDE -cf '$dirBackUp/$name.tar.gz' '$value'" | sed s/Output/Useless/ >outfile; } 2>&1)
+    if [ -f "outfile" ]; then
+      rm "outfile"
+    fi
+    if echo "$ERROR" | grep -q "tar"; then
+      echo "${RED}compress error${CLEAR}:  $value"
+      if [ -n "$DEBUG" ]; then
+        echo "$ERROR"
+      fi
     else
       echo "${GREEN}compress successfully${CLEAR}:  $value"
       add="1"
@@ -74,12 +98,21 @@ for k in $(jq '.files | keys | .[]' "$CONF"); do
     continue
   fi
   if [ ! -f "$value" ]; then
-    echo "${RED}error${CLEAR}:    $value"
+    echo "${RED}compress error${CLEAR}:    $value"
+    if [ -n "$DEBUG" ]; then
+      echo "File not found"
+    fi
   else
     name=$(basename "$value")
-    out=$(sh -c "tar --absolute-names --use-compress-program='pigz --best --recursive -p $PROCESSES' -cf '$dirBackUp/$name.tar.gz' '$value'" | sed -e ":a;$!{N;s/\n//;ba;}")
-    if echo "$out" | grep -q "zip error"; then
-      echo "${RED}compress error${CLEAR}:  $out"
+    ERROR=$({ sh -c "tar --absolute-names --use-compress-program='pigz --best --recursive -p $PROCESSES' -cf '$dirBackUp/$name.tar.gz' '$value'" | sed s/Output/Useless/ >outfile; } 2>&1)
+    if [ -f "outfile" ]; then
+      rm "outfile"
+    fi
+    if echo "$ERROR" | grep -q "tar"; then
+      echo "${RED}compress error${CLEAR}:  $value"
+      if [ -n "$DEBUG" ]; then
+        echo "$ERROR"
+      fi
     else
       echo "${GREEN}compress successfully${CLEAR}:  $value"
       add="1"
