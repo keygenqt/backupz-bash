@@ -1,4 +1,4 @@
-Backupz
+Backupz (bash)
 ===================
 
 ![picture](data/logo-small.png)
